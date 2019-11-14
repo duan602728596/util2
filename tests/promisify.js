@@ -47,6 +47,18 @@ describe('promisify func test', function() {
       expect(result2).to.be.eql([12]);
     });
 
+    // 测试数据是否正确
+    it('should return the correct data', async function() {
+      const divisionPromise = promisify(function division(dividend, divisor, callback) {
+        if (divisor === 0) callback(new Error('divisor cannot be 0'));
+        else callback(null, dividend / divisor);
+      });
+
+      const [result] = await divisionPromise(100, 50);
+
+      expect(result).to.be.equal(2);
+    });
+
     // 测试错误是否能够捕捉
     it('should capable of catching errors', async function() {
       const throwErrorPromise = promisify(function throwError(err, callback) {
