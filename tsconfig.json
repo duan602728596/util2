@@ -3,11 +3,12 @@
     "alwaysStrict": true,
     "moduleResolution": "node",
     "locale": "zh-CN",
-    "module": "commonjs",
+    "module": "ES6",
     "target": "ES5",
     "newLine": "LF",
     "resolveJsonModule": true,
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "declaration": true
   },
   "exclude": [
     "node_modules"
