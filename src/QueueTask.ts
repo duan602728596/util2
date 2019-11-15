@@ -85,7 +85,7 @@ class QueueTask {
 
       if (!this.tasksList[i]) {
         // 需要执行的任务
-        const [workTaskFunc, workTaskFuncThis, ...args]: Task = this.tasksList[len];
+        const [workTaskFunc, workTaskFuncThis, ...args]: Task = this.tasksList[len - 1];
 
         // 加入到工作队列
         this.taskExecuting[i] = this.executionFunc(i, workTaskFunc, workTaskFuncThis, ...args);
