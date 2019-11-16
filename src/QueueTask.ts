@@ -63,6 +63,10 @@ class QueueTask {
    * 判断是否全部执行完毕
    */
   isEnd(): boolean {
+    if (this.tasksList.length > 0) {
+      return false;
+    }
+
     let end: boolean = true;
 
     for (const executing of this.taskExecuting) {
@@ -80,7 +84,7 @@ class QueueTask {
    */
   run(): void {
     // 队列执行完毕后运行的函数
-    if (this.tasksList.length <= 0 && this.isEnd()) {
+    if (this.isEnd()) {
       this.onEnd && this.onEnd();
 
       return;
