@@ -1,1 +1,2 @@
 require('./promisify');
+require('./QueueTask');

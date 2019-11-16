@@ -18,23 +18,15 @@ export type Task = [TaskFunc, any, ...Array<any>];
  */
 export type TaskExecuting = Generator<any, void, unknown>;
 
-/**
- * 传递参数
- */
-export interface QueueTaskOptions {
-  taskLen: number;  // 同一时间最多同时执行的任务数
-  onEnd?: Function; // 队列内所有任务都执行完毕后执行的函数
-}
-
 class QueueTask {
   private taskLen: number;
-  private onEnd?: Function;
   private tasksList: Array<Task>;
+  private onEnd?: Function;
   private taskExecuting: Array<TaskExecuting | undefined>;
 
-  constructor({ taskLen, onEnd }: QueueTaskOptions) {
-    this.taskLen = taskLen;                       // 同一时间最多同时执行的任务数
-    this.onEnd = onEnd;                           // 队列内所有任务都执行完毕后执行的函数
+  constructor(taskLen?: number, onEnd?: Function) {
+    this.taskLen = taskLen ?? 3;                  // 同一时间最多同时执行的任务数
+    this.onEnd = onEnd;                           // 队列执行完毕后运行的函数
     this.tasksList = [];                          // 队列
     this.taskExecuting = new Array(this.taskLen); // 正在执行的任务
   }
@@ -68,22 +60,39 @@ class QueueTask {
   }
 
   /**
+   * 判断是否全部执行完毕
+   */
+  isEnd(): boolean {
+    let end: boolean = true;
+
+    for (const executing of this.taskExecuting) {
+      if (executing) {
+        end = false;
+        break;
+      }
+    }
+
+    return end;
+  }
+
+  /**
    * 分配并执行任务
    */
   run(): void {
-    // 判断任务是否执行完毕
-    if (this.tasksList.length <= 0) {
+    // 队列执行完毕后运行的函数
+    if (this.tasksList.length <= 0 && this.isEnd()) {
       this.onEnd && this.onEnd();
 
       return;
     }
 
+    //  将函数添加到队列
     const runIndex: number[] = [];
 
     for (let i: number = 0; i < this.taskLen; i++) {
       const len: number = this.tasksList.length;
 
-      if (!this.tasksList[i]) {
+      if (!this.taskExecuting[i] && this.tasksList.length > 0) {
         // 需要执行的任务
         const [workTaskFunc, workTaskFuncThis, ...args]: Task = this.tasksList[len - 1];
 
