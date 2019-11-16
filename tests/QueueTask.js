@@ -17,7 +17,7 @@ describe('QueueTask class test', function() {
 
           // 几秒后，将索引插入到数组内
           const runFunc = async (index, time) => {
-            await sleep(time * 1000);
+            await sleep(time * 200); // 如果不准，调至1000
             result.push(index);
           };
 
