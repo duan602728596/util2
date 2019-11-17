@@ -2,7 +2,7 @@
  * 模拟Array.prototype.map的异步方法
  * @param { Array<T> } array: 数组
  * @param { Function } callbackFunc: 异步的回调函数
- * @param { any } thisArg: this
+ * @param { any } thisArg: 异步的回调函数内的this
  */
 async function mapAsync<T, U>(
   array: Array<T>,
