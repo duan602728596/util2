@@ -9,12 +9,22 @@ async function mapAsync<T, U>(
   callbackFunc: (value: T, index: number, array: Array<T>) => Promise<U>,
   thisArg?: any
 ): Promise<Array<U>> {
-  const result: Array<U> = [];
+  const callbackFuncString: string = Object.prototype.toString.call(callbackFunc);
 
-  for (let i: number = 0, j: number = array.length; i < j; i++) {
-    const callbackFuncResult: U = await callbackFunc.call(thisArg, array[i], i, array);
+  if (!(callbackFuncString === '[object Function]' || callbackFuncString === '[object AsyncFunction]')) {
+    throw new TypeError(`${ callbackFunc } is not a function or an async function`);
+  }
+
+  const result: Array<U> = [];
+  const len: number = array.length;
+  let index: number = 0;
+
+  while (index < len) {
+    const callbackFuncResult: U = await callbackFunc.call(thisArg, array[index], index, array);
 
     result.push(callbackFuncResult);
+
+    index += 1;
   }
 
   return result;
